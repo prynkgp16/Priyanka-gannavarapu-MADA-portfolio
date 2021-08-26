@@ -9,7 +9,7 @@ output:
 ##Background
 
 
-![pic.jpg]C:\Users\Priyanka\Desktop\MADA_2021\
+![abd]C:\Users\Priyanka\Desktop\MADA_2021\pic.jpg
 
 My name is Priyanka Gannavarapu. I graduated  with a M.S in Drug Regulatory affairs from the Long island university,NY in 2019.I am into my second year of Ph.D.in Pharmaceutical Health Services, Outcomes, and Policy from the College of Pharmacy.
 
