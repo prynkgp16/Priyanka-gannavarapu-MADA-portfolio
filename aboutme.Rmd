@@ -8,8 +8,11 @@ output:
 
 ##Background
 
+```{r, echo=FALSE, out.width='25%', fig.align='left side'}
+knitr::include_graphics ('pic.jpg', error = FALSE)
+```
 
-![abd]C:\Users\Priyanka\Desktop\MADA_2021\pic.jpg
+
 
 My name is Priyanka Gannavarapu. I graduated  with a M.S in Drug Regulatory affairs from the Long island university,NY in 2019.I am into my second year of Ph.D.in Pharmaceutical Health Services, Outcomes, and Policy from the College of Pharmacy.
 
