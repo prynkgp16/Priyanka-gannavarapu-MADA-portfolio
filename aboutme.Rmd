@@ -8,6 +8,9 @@ output:
 
 ##Background
 
+
+![pic.jpg]C:\Users\Priyanka\Desktop\MADA_2021\
+
 My name is Priyanka Gannavarapu. I graduated  with a M.S in Drug Regulatory affairs from the Long island university,NY in 2019.I am into my second year of Ph.D.in Pharmaceutical Health Services, Outcomes, and Policy from the College of Pharmacy.
 
 ##Statistical Experience and Research interests
@@ -30,5 +33,5 @@ I would describe myself as a beginner using R and Github. i hope to get proficie
 
 ##5 Weird and Hilarious Uses of Data Science
 
-https://www.analyticsvidhya.com/blog/2019/12/five-weird-data-science-uses/
+{https://www.analyticsvidhya.com/blog/2019/12/five-weird-data-science-uses/}
 
