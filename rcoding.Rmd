@@ -5,6 +5,113 @@ output:
     toc: FALSE
 ---
 
-This will contain the future R coding exercise.
+#### Load packages  
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dslabs)
+library(dplyr)
+```
+#Look at help file for gapminder data.
+```{r}
+help("gapminder") 
+```
+
+#### Get an overview of the data structure of gapminder  
+
+```{r}
+str(gapminder)
+```
+
+#### Get a data summary of gapminder.
+
+```{r}
+summary(gapminder)
+```
+
+#### Determine gapminder's object type  
+
+```{r}
+class(gapminder)
+```
+#### Create new object called "africadata"
+
+```{r}
+africadata <- subset(gapminder, continent == "Africa") 
+```
+
+#### Get an overview of the data structure of "africadata"  
+
+```{r}
+str(africadata)
+```
+
+#### Get a data summary of "africadata"  
+
+```{r}
+summary(africadata)
+```
+#### Create new variable in africadata that only contains infant mortality and life expectancy
+```{r}
+africa_infant <- africadata[c("infant_mortality","life_expectancy")]
+str(africa_infant)
+summary(africa_infant)
+```
+#### Create new variable in africadata that only contains population and life expectancy
+
+```{r}
+africa_population <- africadata[c("population","life_expectancy")]
+str(africa_population)
+summary(africa_population)  
+```
+#### Plot life expectancy as a function of infant mortality.
+
+```{r}
+africa_infant_plot <- ggplot(africa_infant, aes(x = log10(infant_mortality), y = life_expectancy)) + geom_point() + ggtitle("Life Expectancy vs. Infant Mortality in Africa") + xlab("Infant Mortality") + ylab("Life Expectancy")
+print(africa_infant_plot)
+```
+#### Plot life expectancy as a function of population.  
+
+```{r}
+africa_population_plot <- ggplot(africa_population, aes(x = log10(population), y = life_expectancy)) + geom_point() + ggtitle("Population vs. Infant Mortality in Africa") + xlab("Population") + ylab("Life Expectancy")
+print(africa_population_plot)
+```
 
 
+
+
+
+
+
+
+
+
+
+
+# Filter only records  for year = 2000
+```{r}
+africadata_2000 <- africadata %>%
+  filter(year == 2000)
+```
+
+
+# Cross-checking
+
+```{r}
+str(africadata_2000)
+```
+
+#Fit-1: Life expectancy as the outcome, and infant mortality as the predictor
+
+```{r}
+fit1 <- lm(africadata_2000$life_expectancy ~ africadata_2000$infant_mortality)
+summary(fit1)
+```
+
+#Fit-2: Life expectancy as the outcome, and population size as the predictor
+
+```{r}
+fit2 <- lm(africadata_2000$life_expectancy ~ africadata_2000$population)
+summary(fit2)
+```
