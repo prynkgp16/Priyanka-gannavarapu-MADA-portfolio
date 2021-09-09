@@ -584,6 +584,58 @@ $(document).ready(function () {
 ## Residual standard error: 8.524 on 49 degrees of freedom
 ## Multiple R-squared:  0.005176,   Adjusted R-squared:  -0.01513 
 ## F-statistic: 0.2549 on 1 and 49 DF,  p-value: 0.6159</code></pre>
+<p>This is extra coding from Dawson Dobash</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Scatter plot between life expectancy and gdp. It shows that most countries with high gdp have high life expectancy</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>africadata_2000 <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>life_expectancy, <span class="at">y=</span>gdp)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div>
+<p><img src="rcoding_files/figure-html/more%20figures%20and%20tables-1.png" width="672" /></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Looking at countries with a life expectancy over 60 and displaying the countries in a descending life expectancy order</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>africadata_2000 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(life_expectancy <span class="sc">&gt;</span> <span class="dv">60</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(life_expectancy,country, region) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(life_expectancy))</span></code></pre></div>
+<pre><code>##    life_expectancy    country          region
+## 1             75.0    Tunisia Northern Africa
+## 2             74.8      Libya Northern Africa
+## 3             73.3    Algeria Northern Africa
+## 4             71.5    Morocco Northern Africa
+## 5             71.4  Mauritius  Eastern Africa
+## 6             70.9 Seychelles  Eastern Africa
+## 7             69.7      Egypt Northern Africa
+## 8             68.4 Cape Verde  Western Africa
+## 9             63.8 Mauritania  Western Africa
+## 10            63.6     Gambia  Western Africa
+## 11            62.4      Sudan Northern Africa
+## 12            62.1    Comoros  Eastern Africa</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Linear model of gdp predicting life expectancy.</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>fit3 <span class="ot">=</span> <span class="fu">lm</span>(life_expectancy <span class="sc">~</span> gdp, <span class="at">data=</span>africadata_2000)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Summary of the linear model fit3. It shows at a p-value of 0.01, life expectancy is significant in predicting life expectancy</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = life_expectancy ~ gdp, data = africadata_2000)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -17.488  -4.316  -1.890   4.272  17.479 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 5.501e+01  1.247e+00  44.106   &lt;2e-16 ***
+## gdp         1.168e-10  4.640e-11   2.516   0.0152 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 8.043 on 49 degrees of freedom
+## Multiple R-squared:  0.1144, Adjusted R-squared:  0.09632 
+## F-statistic: 6.329 on 1 and 49 DF,  p-value: 0.0152</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Displaying the mean life expectancy for each region within the year 2000</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>africadata_2000 <span class="sc">%&gt;%</span> <span class="fu">select</span>(region, life_expectancy) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">average =</span> <span class="fu">mean</span>(life_expectancy))</span></code></pre></div>
+<pre><code>## # A tibble: 5 x 2
+##   region          average
+##   &lt;fct&gt;             &lt;dbl&gt;
+## 1 Eastern Africa     53.7
+## 2 Middle Africa      52.8
+## 3 Northern Africa    71.1
+## 4 Southern Africa    51.5
+## 5 Western Africa     56.8</code></pre>
 </div>
 
 
