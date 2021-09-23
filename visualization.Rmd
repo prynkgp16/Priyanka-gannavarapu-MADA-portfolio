@@ -16,32 +16,17 @@ library(knitr)
 library(tidyverse)
 library(dplyr)
 library(lubridate)
+library(janitor)
+library(here)
 theme_set(theme_light())
 
 ```
 
 ```{r}
-bob_ross_painting <- here::here("data", "elements-by-episode_csv.csv")
+data_1 <- here::here("data","unisex_name_table.csv")
 ```
 
 ```{r}
-str(elements_by_episode_csv)
+str(data_1)
 ```
 
-```{r}
-element_present <- elements_by_episode_csv %>% gather(element, present, -episode, -title) %>% filter(present == 1)
-```
-
-```{r}
-dplyr::glimpse(element_present)
-```
-
-```{r}
-bob_ross_gathered %>%
-  count(element, sort = TRUE) %>%
-  head(25) %>%
-  mutate(element = fct_reorder(element, n)) %>%
-  ggplot(aes(element, n)) +
-  geom_col() +
-  coord_flip()
-```
