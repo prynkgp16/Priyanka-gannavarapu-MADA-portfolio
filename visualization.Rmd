@@ -6,7 +6,9 @@ output:
 ---
 
 This will contain the future visualization exercise.
-
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
 
 
 ```{r}
@@ -16,22 +18,30 @@ library(dplyr)
 library(lubridate)
 theme_set(theme_light())
 
-bob_ross <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-06/bob-ross.csv")
-
 ```
 
 ```{r}
-str(bob_ross)
-```
-
-
-```{r}
-bob_ross_gathered <- bob_ross %>%
-+     janitor::clean_names() %>%
-+     gather(element, present, -episode, -title) %>%
-+     filter(present == 1)
+bob_ross_painting <- here::here("data", "elements-by-episode_csv.csv")
 ```
 
 ```{r}
-summary(bob_ross_gathered)
+str(elements_by_episode_csv)
+```
+
+```{r}
+element_present <- elements_by_episode_csv %>% gather(element, present, -episode, -title) %>% filter(present == 1)
+```
+
+```{r}
+dplyr::glimpse(element_present)
+```
+
+```{r}
+bob_ross_gathered %>%
+  count(element, sort = TRUE) %>%
+  head(25) %>%
+  mutate(element = fct_reorder(element, n)) %>%
+  ggplot(aes(element, n)) +
+  geom_col() +
+  coord_flip()
 ```

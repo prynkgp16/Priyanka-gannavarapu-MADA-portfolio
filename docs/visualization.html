@@ -369,7 +369,8 @@ $(document).ready(function () {
 
 
 <p>This will contain the future visualization exercise.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
 <pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
 <pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
 ## v tibble  3.1.3     v dplyr   1.0.7
@@ -379,40 +380,28 @@ $(document).ready(function () {
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_light</span>())</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>bob_ross <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-06/bob-ross.csv&quot;</span>)</span></code></pre></div>
-<pre><code>## Rows: 403 Columns: 69</code></pre>
-<pre><code>## -- Column specification --------------------------------------------------------
-## Delimiter: &quot;,&quot;
-## chr  (2): EPISODE, TITLE
-## dbl (67): APPLE_FRAME, AURORA_BOREALIS, BARN, BEACH, BOAT, BRIDGE, BUILDING,...</code></pre>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code></pre></div>
 <pre><code>## 
-## i Use `spec()` to retrieve the full column specification for this data.
-## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bob_ross</span></code></pre></div>
-<pre><code>## # A tibble: 403 x 69
-##    EPISODE TITLE   APPLE_FRAME AURORA_BOREALIS  BARN BEACH  BOAT BRIDGE BUILDING
-##    &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
-##  1 S01E01  &quot;\&quot;A W~           0               0     0     0     0      0        0
-##  2 S01E02  &quot;\&quot;MT.~           0               0     0     0     0      0        0
-##  3 S01E03  &quot;\&quot;EBO~           0               0     0     0     0      0        0
-##  4 S01E04  &quot;\&quot;WIN~           0               0     0     0     0      0        0
-##  5 S01E05  &quot;\&quot;QUI~           0               0     0     0     0      0        0
-##  6 S01E06  &quot;\&quot;WIN~           0               0     0     0     0      0        0
-##  7 S01E07  &quot;\&quot;AUT~           0               0     0     0     0      0        0
-##  8 S01E08  &quot;\&quot;PEA~           0               0     0     0     0      0        0
-##  9 S01E09  &quot;\&quot;SEA~           0               0     0     1     0      0        0
-## 10 S01E10  &quot;\&quot;MOU~           0               0     0     0     0      0        0
-## # ... with 393 more rows, and 60 more variables: BUSHES &lt;dbl&gt;, CABIN &lt;dbl&gt;,
-## #   CACTUS &lt;dbl&gt;, CIRCLE_FRAME &lt;dbl&gt;, CIRRUS &lt;dbl&gt;, CLIFF &lt;dbl&gt;, CLOUDS &lt;dbl&gt;,
-## #   CONIFER &lt;dbl&gt;, CUMULUS &lt;dbl&gt;, DECIDUOUS &lt;dbl&gt;, DIANE_ANDRE &lt;dbl&gt;,
-## #   DOCK &lt;dbl&gt;, DOUBLE_OVAL_FRAME &lt;dbl&gt;, FARM &lt;dbl&gt;, FENCE &lt;dbl&gt;, FIRE &lt;dbl&gt;,
-## #   FLORIDA_FRAME &lt;dbl&gt;, FLOWERS &lt;dbl&gt;, FOG &lt;dbl&gt;, FRAMED &lt;dbl&gt;, GRASS &lt;dbl&gt;,
-## #   GUEST &lt;dbl&gt;, HALF_CIRCLE_FRAME &lt;dbl&gt;, HALF_OVAL_FRAME &lt;dbl&gt;, HILLS &lt;dbl&gt;,
-## #   LAKE &lt;dbl&gt;, LAKES &lt;dbl&gt;, LIGHTHOUSE &lt;dbl&gt;, MILL &lt;dbl&gt;, MOON &lt;dbl&gt;, ...</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>bob_ross <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>()</span></code></pre></div>
-<p><img src="visualization_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     date, intersect, setdiff, union</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_light</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bob_ross_painting <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;elements-by-episode_csv.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(elements_by_episode_csv)</span></code></pre></div>
+<pre><code>## Error in str(elements_by_episode_csv): object &#39;elements_by_episode_csv&#39; not found</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>element_present <span class="ot">&lt;-</span> elements_by_episode_csv <span class="sc">%&gt;%</span> <span class="fu">gather</span>(element, present, <span class="sc">-</span>episode, <span class="sc">-</span>title) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(present <span class="sc">==</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## Error in gather(., element, present, -episode, -title): object &#39;elements_by_episode_csv&#39; not found</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(element_present)</span></code></pre></div>
+<pre><code>## Error in dplyr::glimpse(element_present): object &#39;element_present&#39; not found</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>bob_ross_gathered <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(element, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">25</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">element =</span> <span class="fu">fct_reorder</span>(element, n)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(element, n)) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code></pre></div>
+<pre><code>## Error in count(., element, sort = TRUE): object &#39;bob_ross_gathered&#39; not found</code></pre>
 
 
 
