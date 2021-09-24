@@ -5,10 +5,14 @@ output:
     toc: FALSE
 ---
 
+```{r}
+knitr::include_graphics(here::here("recreate.png"))
+```
 
 ```{r}
 knitr::include_graphics(here::here("bobross_pic.png"))
 ```
+
 
 #Libraries
 
@@ -70,7 +74,9 @@ bob_ross_gathered %>%
   add_count(title) %>%
   arrange(desc(n))
 ```
+
 #Change in the paitings overtime
+
 ```{r}
 by_season_element <- bob_ross_gathered %>%
   filter(!element %in% c("Tree", "Trees")) %>%
