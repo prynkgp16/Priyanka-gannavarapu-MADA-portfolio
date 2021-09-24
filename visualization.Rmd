@@ -35,8 +35,6 @@ glimpse(bob_ross)
   janitor::clean_names() %>%
   gather(element, present, -episode, -title) %>%
   filter(present == 1) %>%
-  mutate(title = str_to_title(str_remove_all(title, '"')),
-         element = str_to_title(str_replace(element, "_", " "))) %>%
   select(-present) %>%
   extract(episode, c("season", "episode_number"), "S(.*)E(.*)", convert = TRUE, remove = FALSE) %>%
   arrange(season, episode_number)
