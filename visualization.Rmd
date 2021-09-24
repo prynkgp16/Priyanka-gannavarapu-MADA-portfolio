@@ -10,6 +10,8 @@ output:
 knitr::include_graphics(here::here("bobross_pic.png"))
 ```
 
+#Libraries
+
 ```{r}
 library(knitr)
 library(tidyverse)
@@ -21,6 +23,8 @@ theme_set(theme_light())
 
 ```
 
+#Import data
+
 ```{r}
 bob_ross <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-06/bob-ross.csv")
 ```
@@ -29,6 +33,8 @@ bob_ross <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/t
 ```{r}
 glimpse(bob_ross)
 ```
+
+#Cleaning data
 
 ```{r}
  bob_ross_gathered <- bob_ross %>%
@@ -39,10 +45,13 @@ glimpse(bob_ross)
   extract(episode, c("season", "episode_number"), "S(.*)E(.*)", convert = TRUE, remove = FALSE) %>%
   arrange(season, episode_number)
 ```
+#recheck
 
 ```{r}
 glimpse(bob_ross_gathered)
 ```
+
+#Plottting
 
 ```{r}
 bob_ross_gathered %>%
@@ -54,12 +63,14 @@ bob_ross_gathered %>%
   coord_flip()
 ```
 
+#Most "crowded" paintings
+
 ```{r}
 bob_ross_gathered %>%
   add_count(title) %>%
   arrange(desc(n))
 ```
-
+#Change in the paitings overtime
 ```{r}
 by_season_element <- bob_ross_gathered %>%
   filter(!element %in% c("Tree", "Trees")) %>%
