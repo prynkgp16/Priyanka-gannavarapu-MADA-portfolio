@@ -5,28 +5,57 @@ output:
     toc: FALSE
 ---
 
-This will contain the future visualization exercise.
-```{r, echo=FALSE}
-knitr::opts_chunk$set(error = TRUE)
-```
 
+```{r, echo=FALSE, out.width='25%', fig.align='center'}
+knitr::include_graphics(here::here("bobross_pic.png"))
+```
 
 ```{r}
 library(knitr)
 library(tidyverse)
 library(dplyr)
-library(lubridate)
 library(janitor)
 library(here)
+library(readr)
 theme_set(theme_light())
 
 ```
 
 ```{r}
-data_1 <- here::here("data","unisex_name_table.csv")
+bob_ross <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-06/bob-ross.csv")
+```
+
+
+```{r}
+glimpse(bob_ross)
 ```
 
 ```{r}
-str(data_1)
+ bob_ross_creations <- bob_ross %>%
+  janitor::clean_names() %>%
+  gather(element, present, -episode, -title) %>%
+  filter(present == 1)
 ```
+
+```{r}
+glimpse(bob_ross_creations)
+```
+
+```{r}
+bob_ross_creations %>%
+  count(element, sort = TRUE) %>%
+  head(25) %>%
+  mutate(element = fct_reorder(element, n)) %>%
+  ggplot(aes(element, n , label = scales::percent(n))) +
+  geom_col(fill = "dodgerblue3") +
+  coord_flip()
+```
+
+```{r}
+bob_ross_creations %>%
+  add_count(title) %>%
+  arrange(desc(n))
+```
+
+
 
