@@ -6,7 +6,7 @@ output:
 ---
 
 
-```{r, echo=FALSE, out.width='25%', fig.align='center'}
+```{r}
 knitr::include_graphics(here::here("bobross_pic.png"))
 ```
 
@@ -31,18 +31,23 @@ glimpse(bob_ross)
 ```
 
 ```{r}
- bob_ross_creations <- bob_ross %>%
+ bob_ross_gathered <- bob_ross %>%
   janitor::clean_names() %>%
   gather(element, present, -episode, -title) %>%
-  filter(present == 1)
+  filter(present == 1) %>%
+  mutate(title = str_to_title(str_remove_all(title, '"')),
+         element = str_to_title(str_replace(element, "_", " "))) %>%
+  select(-present) %>%
+  extract(episode, c("season", "episode_number"), "S(.*)E(.*)", convert = TRUE, remove = FALSE) %>%
+  arrange(season, episode_number)
 ```
 
 ```{r}
-glimpse(bob_ross_creations)
+glimpse(bob_ross_gathered)
 ```
 
 ```{r}
-bob_ross_creations %>%
+bob_ross_gathered %>%
   count(element, sort = TRUE) %>%
   head(25) %>%
   mutate(element = fct_reorder(element, n)) %>%
@@ -52,10 +57,28 @@ bob_ross_creations %>%
 ```
 
 ```{r}
-bob_ross_creations %>%
+bob_ross_gathered %>%
   add_count(title) %>%
   arrange(desc(n))
 ```
 
+```{r}
+by_season_element <- bob_ross_gathered %>%
+  filter(!element %in% c("Tree", "Trees")) %>%
+  group_by(season) %>%
+  mutate(number_episodes = n_distinct(episode)) %>%
+  count(season, element, number_episodes, sort = TRUE) %>%
+  mutate(percent_included = n / number_episodes) %>%
+  group_by(element) %>%
+  mutate(element_total = sum(n)) %>%
+  ungroup()
 
+by_season_element %>%
+  filter(element_total >= 50) %>%
+  ggplot(aes(season, percent_included, color = element)) +
+  geom_line() +
+  scale_y_continuous(labels = scales::percent_format()) +
+  expand_limits(y = 0) +
+  facet_wrap(~ element)
+```
 
