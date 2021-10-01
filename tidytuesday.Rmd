@@ -4,6 +4,144 @@ output:
   html_document:
     toc: FALSE
 ---
+##Packages
 
-This will contain the future Tidy Tuesday exercise.
+
+```{r}
+library(tidytuesdayR)
+library(dplyr)
+library(ggplot2)
+library(here)
+```
+
+## Loading and Displaying data from Github
+
+
+```{r}
+papers <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-09-28/papers.csv')
+```
+
+```{r}
+glimpse(papers)
+```
+
+```{r}
+authors <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-09-28/authors.csv')
+```
+
+```{r}
+glimpse(authors)
+```
+
+```{r}
+programs <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-09-28/programs.csv')
+```
+
+```{r}
+glimpse(programs)
+```
+
+```{r}
+paper_authors <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-09-28/paper_authors.csv')
+```
+
+
+```{r}
+glimpse(paper_authors)
+``` 
+
+```{r}
+paper_programs <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-09-28/paper_programs.csv')
+```
+
+
+```{r}
+glimpse(paper_programs)
+``` 
+
+
+##Cleaning the data
+
+```{r}
+joined_df <- dplyr::left_join(papers, paper_authors) %>%
+                dplyr::left_join(authors) %>%
+                dplyr::left_join(paper_programs) %>%
+                dplyr::left_join(programs) %>%
+              dplyr::mutate(
+                catalogue_group = stringr::str_sub(paper, 1, 1),
+                catalogue_group = dplyr::case_when(
+                  catalogue_group == "h" ~ "Historical",
+                  catalogue_group == "t" ~ "Technical",
+                  catalogue_group == "w" ~ "General",
+                ),
+              .after = paper
+              )
+joined_df
+```
+
+# Structure of data
+
+```{r}
+str(joined_df)
+```
+
+#Displaying data
+
+```{r}
+glimpse(joined_df)
+```
+
+#DATA in 1989
+
+```{r}
+data_1989 <- joined_df %>% filter(year ==1989)
+```
+
+```{r}
+glimpse(data_1989)
+```
+
+
+#Program category in 1989
+
+```{r}
+program_1989 = data_1989 %>% group_by(program_category) %>%summarise(Count = n()) %>% arrange(desc(Count))
+```
+
+```{r}
+glimpse(program_1989)
+```
+
+
+# Program category in 1989
+
+```{r}
+ggplot(data=program_1989, aes(x=Count, y=program_category)) +geom_bar(stat="identity") + coord_flip()
+```
+
+```{r}
+catalogue_data <- joined_df %>% 
+  subset( select = c(paper, year, catalogue_group)) %>%
+group_by(paper) %>% distinct()
+```
+
+```{r}
+glimpse(catalogue_data)
+```
+
+#Plotting catalogue group over time
+
+```{r}
+cata_group <- catalogue_data %>% group_by(year) %>% 
+  count( catalogue_group, sort = TRUE) %>% arrange(year)
+```
+
+```{r}
+glimpse(cata_group)
+```
+
+```{r}
+cata_group %>% ggplot(aes(x = year, fill = catalogue_group )) +
+geom_area(stat="bin", bins = 20)
+```
 
