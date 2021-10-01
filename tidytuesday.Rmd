@@ -79,19 +79,21 @@ joined_df <- dplyr::left_join(papers, paper_authors) %>%
 joined_df
 ```
 
-# Structure of data
+##Structure of data
 
 ```{r}
 str(joined_df)
 ```
 
-#Displaying data
+
+##Displaying data
+
 
 ```{r}
 glimpse(joined_df)
 ```
 
-#DATA in 1989
+##DATA in 1989
 
 ```{r}
 data_1989 <- joined_df %>% filter(year ==1989)
@@ -102,7 +104,7 @@ glimpse(data_1989)
 ```
 
 
-#Program category in 1989
+###Program category in 1989
 
 ```{r}
 program_1989 = data_1989 %>% group_by(program_category) %>%summarise(Count = n()) %>% arrange(desc(Count))
@@ -113,7 +115,7 @@ glimpse(program_1989)
 ```
 
 
-# Program category in 1989
+##Program category in 1989
 
 ```{r}
 ggplot(data=program_1989, aes(x=Count, y=program_category)) +geom_bar(stat="identity") + coord_flip()
@@ -129,7 +131,7 @@ group_by(paper) %>% distinct()
 glimpse(catalogue_data)
 ```
 
-#Plotting catalogue group over time
+##Plotting catalogue group over time
 
 ```{r}
 cata_group <- catalogue_data %>% group_by(year) %>% 

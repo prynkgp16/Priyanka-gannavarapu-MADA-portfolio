@@ -489,9 +489,7 @@ $(document).ready(function () {
 ## 10 w0009 General          1973     9 From Age~ w0004~ Lee ~ &lt;NA&gt;      pli669    
 ## # ... with 130,071 more rows, and 3 more variables: program &lt;chr&gt;,
 ## #   program_desc &lt;chr&gt;, program_category &lt;chr&gt;</code></pre>
-</div>
-<div id="structure-of-data" class="section level1">
-<h1>Structure of data</h1>
+<p>##Structure of data</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(joined_df)</span></code></pre></div>
 <pre><code>## tibble [130,081 x 12] (S3: tbl_df/tbl/data.frame)
 ##  $ paper           : chr [1:130081] &quot;w0001&quot; &quot;w0002&quot; &quot;w0003&quot; &quot;w0004&quot; ...
@@ -506,7 +504,7 @@ $(document).ready(function () {
 ##  $ program         : chr [1:130081] NA NA NA NA ...
 ##  $ program_desc    : chr [1:130081] NA NA NA NA ...
 ##  $ program_category: chr [1:130081] NA NA NA NA ...</code></pre>
-<p>#Displaying data</p>
+<p>##Displaying data</p>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(joined_df)</span></code></pre></div>
 <pre><code>## Rows: 130,081
 ## Columns: 12
@@ -522,7 +520,7 @@ $(document).ready(function () {
 ## $ program          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N~
 ## $ program_desc     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N~
 ## $ program_category &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N~</code></pre>
-<p>#DATA in 1989</p>
+<p>##DATA in 1989</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>data_1989 <span class="ot">&lt;-</span> joined_df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year <span class="sc">==</span><span class="dv">1989</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(data_1989)</span></code></pre></div>
 <pre><code>## Rows: 1,042
@@ -539,16 +537,14 @@ $(document).ready(function () {
 ## $ program          &lt;chr&gt; &quot;AG&quot;, &quot;PE&quot;, &quot;AG&quot;, &quot;PE&quot;, &quot;AG&quot;, &quot;PE&quot;, &quot;AG&quot;, &quot;PE&quot;, &quot;AG&quot;,~
 ## $ program_desc     &lt;chr&gt; &quot;Economics of Aging&quot;, &quot;Public Economics&quot;, &quot;Economics ~
 ## $ program_category &lt;chr&gt; &quot;Micro&quot;, &quot;Micro&quot;, &quot;Micro&quot;, &quot;Micro&quot;, &quot;Micro&quot;, &quot;Micro&quot;,~</code></pre>
-<p>#Program category in 1989</p>
+<p>###Program category in 1989</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>program_1989 <span class="ot">=</span> data_1989 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(program_category) <span class="sc">%&gt;%</span><span class="fu">summarise</span>(<span class="at">Count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(Count))</span></code></pre></div>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(program_1989)</span></code></pre></div>
 <pre><code>## Rows: 3
 ## Columns: 2
 ## $ program_category &lt;chr&gt; &quot;Macro/International&quot;, &quot;Micro&quot;, NA
 ## $ Count            &lt;int&gt; 717, 324, 1</code></pre>
-</div>
-<div id="program-category-in-1989" class="section level1">
-<h1>Program category in 1989</h1>
+<p>##Program category in 1989</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>program_1989, <span class="fu">aes</span>(<span class="at">x=</span>Count, <span class="at">y=</span>program_category)) <span class="sc">+</span><span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>()</span></code></pre></div>
 <p><img src="tidytuesday_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>catalogue_data <span class="ot">&lt;-</span> joined_df <span class="sc">%&gt;%</span> </span>
@@ -561,7 +557,7 @@ $(document).ready(function () {
 ## $ paper           &lt;chr&gt; &quot;w0001&quot;, &quot;w0002&quot;, &quot;w0003&quot;, &quot;w0004&quot;, &quot;w0005&quot;, &quot;w0006&quot;, ~
 ## $ year            &lt;dbl&gt; 1973, 1973, 1973, 1973, 1973, 1973, 1973, 1973, 1973, ~
 ## $ catalogue_group &lt;chr&gt; &quot;General&quot;, &quot;General&quot;, &quot;General&quot;, &quot;General&quot;, &quot;General&quot;,~</code></pre>
-<p>#Plotting catalogue group over time</p>
+<p>##Plotting catalogue group over time</p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>cata_group <span class="ot">&lt;-</span> catalogue_data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> </span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>( catalogue_group, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(year)</span></code></pre></div>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cata_group)</span></code></pre></div>
