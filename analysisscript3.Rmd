@@ -67,6 +67,7 @@ data_bi_pre_rem
 ```
 
 
+
 #setting random seed to 123
 
 ```{r}

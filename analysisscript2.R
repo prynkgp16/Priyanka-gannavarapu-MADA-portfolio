@@ -1,5 +1,5 @@
 ---
-title: "analysisscript2"
+title: "Cross-Validation, ROC-Auc, and RMSE"
 author: "priyanka"
 date: "10/20/2021"
 output: html_document
@@ -16,14 +16,14 @@ library(dplyr)
 
 
 
-data_location1 <- here::here("data","processed_data","processeddata.rds")
+data_location <- here::here("data","processed_data","processeddata.rds")
 
 
 
 #load data. 
 
 
-cleaneddata2 <- readRDS(data_location1)
+cleaneddata <- readRDS(data_location1)
 
 
 #SPliting data :a training set and a testing set
