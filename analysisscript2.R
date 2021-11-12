@@ -16,7 +16,7 @@ library(dplyr)
 
 
 
-data_location <- here::here("data","processed_data","processeddata.rds")
+data_location <- here::here("files","processeddata.rds")
 
 
 
