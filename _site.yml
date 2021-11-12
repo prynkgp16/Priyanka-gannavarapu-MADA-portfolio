@@ -24,9 +24,9 @@ navbar:
         - text: "Exploration"
           href: ./exploration.html
         - text: "Model Fitting using Tidymodels"
-          href: ./analysisscript.R
+          href: ./analysisscript.html
         - text: "Cross-Validation, ROC-Auc, and RMSE"
-          href: ./analysisscript2.R
+          href: ./analysisscript2.html
         - text: "Machine Learning Modeling"
           href: ./analysisscript3.html
   right:
