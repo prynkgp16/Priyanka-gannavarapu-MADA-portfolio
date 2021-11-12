@@ -22,7 +22,7 @@ navbar:
         - text: "Tidy Tuesday 2 Exercise"
           href: ./tidytuesday_exercise2.html
         - text: "Exploration"
-          href: ./exploration.html
+          href: ./Exploration.html
         - text: "Model Fitting using Tidymodels"
           href: ./analysisscript.html
         - text: "Cross-Validation, ROC-Auc, and RMSE"
