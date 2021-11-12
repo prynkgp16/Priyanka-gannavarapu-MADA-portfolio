@@ -24,11 +24,11 @@ navbar:
         - text: "Exploration"
           href: ./exploration.html
         - text: "Model Fitting using Tidymodels"
-          href: ./analysisscript-rmd.html
+          href: ./analysisscript.R
         - text: "Cross-Validation, ROC-Auc, and RMSE"
-          href: ./analysisscript_pt2.html
+          href: ./analysisscript2.R
         - text: "Machine Learning Modeling"
-          href: ./analysisscript_pt3.html
+          href: ./analysisscript3.html
   right:
     - icon: fa-github fa-lg
       href: URL-TO-THIS-REPOSITORY-HERE        
