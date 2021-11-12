@@ -1,3 +1,13 @@
+
+---
+title: "Model Fitting using Tidymodels"
+author: "priyanka"
+output: html_document
+---
+
+
+
+
 ###############################
 # analysis script
 #
