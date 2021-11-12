@@ -85,9 +85,7 @@ joined_df
 str(joined_df)
 ```
 
-
 ##Displaying data
-
 
 ```{r}
 glimpse(joined_df)
@@ -104,7 +102,7 @@ glimpse(data_1989)
 ```
 
 
-###Program category in 1989
+##Program category in 1989
 
 ```{r}
 program_1989 = data_1989 %>% group_by(program_category) %>%summarise(Count = n()) %>% arrange(desc(Count))
