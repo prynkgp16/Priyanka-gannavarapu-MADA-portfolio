@@ -320,7 +320,7 @@ rf_mod %>% parameters()
 
 rf_res <-
     rf_workflow %>%
-     tune::tune_grid(resamples = folds,
+     tune::tune_grid(resamples = fold_5_data,
                               grid = 25,
                               control = control_grid(verbose = TRUE, save_pred = TRUE),
                               metrics = metric_set(rmse))

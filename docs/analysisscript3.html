@@ -439,7 +439,7 @@ $(document).ready(function () {
 ## x recipes::step()   masks stats::step()
 ## x Matrix::unpack()  masks tidyr::unpack()
 ## x recipes::update() masks Matrix::update(), stats::update()
-## * Use tidymodels_prefer() to resolve common conflicts.</code></pre>
+## * Dig deeper into tidy modeling with R at https://www.tmwr.org</code></pre>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
 <pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
 <pre><code>## v readr   2.0.1     v forcats 0.5.1
@@ -10282,10 +10282,10 @@ $(document).ready(function () {
 ## See `?dials::finalize` or `?dials::update.parameters` for more information.</code></pre>
 <div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>rf_res <span class="ot">&lt;-</span></span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>    rf_workflow <span class="sc">%&gt;%</span></span>
-<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">tune_grid</span>(<span class="at">resample =</span> fold_5_data,</span>
-<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">grid =</span> <span class="dv">25</span>,</span>
-<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse),</span>
-<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">control =</span> <span class="fu">control_grid</span>(<span class="at">save_pred =</span> T, <span class="at">verbose =</span> T))</span></code></pre></div>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>     tune<span class="sc">::</span><span class="fu">tune_grid</span>(<span class="at">resamples =</span> fold_5_data,</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">grid =</span> <span class="dv">25</span>,</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">control =</span> <span class="fu">control_grid</span>(<span class="at">verbose =</span> <span class="cn">TRUE</span>, <span class="at">save_pred =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>                              <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse))</span></code></pre></div>
 <pre><code>## i Creating pre-processing data to finalize unknown parameter: mtry</code></pre>
 <pre><code>## i Fold1, Repeat1: preprocessor 1/1</code></pre>
 <pre><code>## v Fold1, Repeat1: preprocessor 1/1</code></pre>
