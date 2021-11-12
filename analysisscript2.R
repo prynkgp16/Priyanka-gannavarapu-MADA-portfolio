@@ -23,7 +23,7 @@ data_location <- here::here("files","processeddata.rds")
 #load data. 
 
 
-cleaneddata <- readRDS(data_location1)
+cleaneddata <- readRDS(data_location)
 
 
 #SPliting data :a training set and a testing set

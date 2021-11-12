@@ -297,28 +297,44 @@ best_model
 
 ## random forest model
 ```{r}
-rf_model <- rand_forest(mtry = tune(), min_n = tune(), trees = 1000) %>%
-  set_engine("ranger", num.threads = cores) %>%
+
+cores <- parallel::detectCores()
+cores
+
+  
+rf_mod <- 
+  rand_forest(mtry = tune(), min_n = tune(), trees = 1000) %>% 
+  set_engine("ranger", num.threads = cores) %>% 
   set_mode("regression")
 
-rf_model %>%
-  parameters()
+
 
  rf_workflow <-
     workflow() %>%
-    add_model(rf_model) %>%
+    add_model(rf_mod) %>%
     add_recipe(recipe_BT)
 
+# 3/4) create tuning grid/tune hyperparameters 
+rf_mod %>% parameters() 
  
+
 rf_res <-
     rf_workflow %>%
-     tune_grid(fold_5_data,
-grid = 25,
-               control = 
-                   control_grid(save_pred = TRUE),
-              metrics = 
-                   metric_set(rmse))
+     tune_grid(resample = fold_5_data,
+            grid = 25,
+            metrics = metric_set(rmse),
+            control = control_grid(save_pred = T, verbose = T))
 
+#Looking at the models created by random forest
+rf_res %>% 
+  collect_metrics()
+
+
+
+#  autoplot the results 
+rf_res %>% autoplot()
+
+# select best  combination 
 rf_res %>% 
   show_best(metric = "rmse")
 
@@ -327,14 +343,42 @@ rf_best <-
   rf_res %>%
   select_best(metric = "rmse")
 
-
+# finalize workflow 
 final_rf_workflow <- 
   rf_workflow %>%
   finalize_workflow(rf_best)
 
+fit_best_forest <- final_rf_workflow %>% 
+  fit(data = train_data)
 
-final__rf_forest <- 
-  final_rf_workflow %>%
-  last_fit(data_split)
 
+# Use a trained workflow to predict section using train data
+
+predict(fit_best_forest, new_data = train_data)
+
+
+# include predicted probabilities
+
+aug_best_forest <- augment(fit_best_forest, new_data = train_data)
+
+
+# estimate model performance with rmse 
+forest_rmse <- aug_best_forest %>% 
+  rmse(truth = BodyTemp, .pred) %>% 
+  mutate(model = 'Random Forest')
+
+
+#  Make diagnostic plots 
+
+#plot actual vs fitted 
+
+ggplot(data = aug_best_forest, aes(x = .pred, y = BodyTemp)) +
+  geom_point()
+
+#plot residuals vs fitted 
+
+aug_best_forest %>% 
+  mutate(resid = BodyTemp - .pred) %>% 
+  ggplot(aes(x = .pred, y = resid)) +
+  geom_point()
 ```

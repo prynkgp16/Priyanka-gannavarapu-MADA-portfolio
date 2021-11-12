@@ -21,7 +21,7 @@ library(here) #for data loading/saving
 library(tidyverse)
 #path to data
 #note the use of the here() package and not absolute paths
-data_location <- here::here("data","processed_data","processeddata.rds")
+data_location <- here::here("files","processeddata.rds")
 
 #load data. 
 cleaneddata <- readRDS(data_location)
