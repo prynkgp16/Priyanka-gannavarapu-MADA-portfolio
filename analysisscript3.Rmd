@@ -320,10 +320,10 @@ rf_mod %>% parameters()
 
 rf_res <-
     rf_workflow %>%
-     tune_grid(resample = fold_5_data,
-            grid = 25,
-            metrics = metric_set(rmse),
-            control = control_grid(save_pred = T, verbose = T))
+     tune::tune_grid(resamples = folds,
+                              grid = 25,
+                              control = control_grid(verbose = TRUE, save_pred = TRUE),
+                              metrics = metric_set(rmse))
 
 #Looking at the models created by random forest
 rf_res %>% 
