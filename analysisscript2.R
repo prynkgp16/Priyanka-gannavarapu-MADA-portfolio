@@ -31,7 +31,7 @@ cleaneddata <- readRDS(data_location)
 # Put 3/4 of the data into the training set 
 
 
-data_split1 <- initial_split(cleaneddata2, prop = 3/4)
+data_split1 <- initial_split(cleaneddata, prop = 3/4)
 
 
 # Create data frames for the two sets:

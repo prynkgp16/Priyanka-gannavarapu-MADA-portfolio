@@ -112,6 +112,6 @@ Comp_model <- anova(glm_1$fit, glm_2$fit)
 #####  model with all predictors had a better fit than single predcitor model
 
 # save fit results table  
-saveRDS(Comp_model, file = here::here("results", "glmtable.Rds"))
-saveRDS(comparing_model, file = here::here("results", "lineartable.Rds"))
+saveRDS(Comp_model, file = here::here("files", "glmtable.Rds"))
+saveRDS(comparing_model, file = here::here("files", "lineartable.Rds"))
   
