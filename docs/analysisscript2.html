@@ -350,13 +350,13 @@ $(document).ready(function () {
       <a href="./tidytuesday_exercise2.html">Tidy Tuesday 2 Exercise</a>
     </li>
     <li>
-      <a href="./exploration.html">Exploration</a>
+      <a href="./Exploration.html">Exploration</a>
     </li>
     <li>
-      <a href="./analysisscript.R">Model Fitting using Tidymodels</a>
+      <a href="./analysisscript.html">Model Fitting using Tidymodels</a>
     </li>
     <li>
-      <a href="./analysisscript2.R">Cross-Validation, ROC-Auc, and RMSE</a>
+      <a href="./analysisscript2.html">Cross-Validation, ROC-Auc, and RMSE</a>
     </li>
     <li>
       <a href="./analysisscript3.html">Machine Learning Modeling</a>
@@ -366,7 +366,7 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="URL-TO-THIS-REPOSITORY-HERE">
+  <a href="https://prynkgp16.github.io/Priyanka-gannavarapu-MADA-portfolio/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -407,7 +407,7 @@ $(document).ready(function () {
 ## x dplyr::filter()  masks stats::filter()
 ## x dplyr::lag()     masks stats::lag()
 ## x recipes::step()  masks stats::step()
-## * Use suppressPackageStartupMessages() to eliminate package startup messages</code></pre>
+## * Learn how to get started at https://www.tidymodels.org/start/</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -498,16 +498,16 @@ $(document).ready(function () {
 <pre><code>## # A tibble: 38 x 5
 ##    term                 estimate std.error statistic p.value
 ##    &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-##  1 (Intercept)           -4.32       8.80    -0.491    0.623
-##  2 SwollenLymphNodesYes  -0.277      0.232   -1.19     0.233
-##  3 ChestCongestionYes     0.345      0.249    1.39     0.166
-##  4 ChillsSweatsYes        0.144      0.331    0.434    0.664
-##  5 NasalCongestionYes     0.408      0.291    1.40     0.161
-##  6 CoughYNYes            -0.0513     0.623   -0.0823   0.934
-##  7 SneezeYes             -0.0826     0.250   -0.330    0.741
-##  8 FatigueYes             0.328      0.476    0.690    0.490
-##  9 SubjectiveFeverYes     0.210      0.269    0.779    0.436
-## 10 HeadacheYes            0.152      0.338    0.451    0.652
+##  1 (Intercept)           -2.23       9.39    -0.238   0.812 
+##  2 SwollenLymphNodesYes  -0.203      0.236   -0.861   0.389 
+##  3 ChestCongestionYes     0.218      0.260    0.836   0.403 
+##  4 ChillsSweatsYes        0.212      0.343    0.619   0.536 
+##  5 NasalCongestionYes     0.531      0.316    1.68    0.0924
+##  6 CoughYNYes            -0.113      0.596   -0.190   0.849 
+##  7 SneezeYes              0.183      0.253    0.725   0.468 
+##  8 FatigueYes             0.212      0.495    0.428   0.669 
+##  9 SubjectiveFeverYes     0.0165     0.269    0.0613  0.951 
+## 10 HeadacheYes            0.549      0.367    1.50    0.135 
 ## # ... with 28 more rows</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicting with unseen test data</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -521,7 +521,7 @@ $(document).ready(function () {
 ##  2 No         
 ##  3 No         
 ##  4 No         
-##  5 No         
+##  5 Yes        
 ##  6 No         
 ##  7 No         
 ##  8 No         
@@ -543,16 +543,16 @@ $(document).ready(function () {
 <pre><code>## # A tibble: 183 x 3
 ##    Nausea .pred_class .pred_Yes
 ##    &lt;fct&gt;  &lt;fct&gt;           &lt;dbl&gt;
-##  1 Yes    No              0.269
-##  2 No     No              0.220
-##  3 Yes    No              0.314
-##  4 No     No              0.128
-##  5 Yes    No              0.132
-##  6 No     No              0.283
-##  7 No     No              0.445
-##  8 Yes    No              0.179
-##  9 Yes    No              0.238
-## 10 No     No              0.223
+##  1 Yes    No             0.0901
+##  2 Yes    No             0.409 
+##  3 No     No             0.410 
+##  4 No     No             0.428 
+##  5 Yes    Yes            0.975 
+##  6 No     No             0.241 
+##  7 Yes    No             0.194 
+##  8 No     No             0.260 
+##  9 No     No             0.341 
+## 10 No     No             0.206 
 ## # ... with 173 more rows</code></pre>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ROC curve</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -609,10 +609,10 @@ $(document).ready(function () {
 <span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_parsnip</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
-##   term         estimate std.error statistic  p.value
-##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)   -0.582      0.165    -3.52  0.000433
-## 2 RunnyNoseYes  -0.0576     0.197    -0.292 0.770</code></pre>
+##   term         estimate std.error statistic    p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 (Intercept)    -0.772     0.173    -4.47  0.00000794
+## 2 RunnyNoseYes    0.184     0.202     0.908 0.364</code></pre>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicting with unseen test data</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(nausea_runnynose_fit, test_data)</span></code></pre></div>
@@ -641,16 +641,16 @@ $(document).ready(function () {
 <pre><code>## # A tibble: 183 x 3
 ##    Nausea .pred_class .pred_Yes
 ##    &lt;fct&gt;  &lt;fct&gt;           &lt;dbl&gt;
-##  1 Yes    No              0.345
-##  2 No     No              0.345
-##  3 Yes    No              0.345
-##  4 No     No              0.358
-##  5 Yes    No              0.345
-##  6 No     No              0.358
-##  7 No     No              0.358
-##  8 Yes    No              0.358
-##  9 Yes    No              0.345
-## 10 No     No              0.345
+##  1 Yes    No              0.316
+##  2 Yes    No              0.316
+##  3 No     No              0.357
+##  4 No     No              0.357
+##  5 Yes    No              0.316
+##  6 No     No              0.357
+##  7 Yes    No              0.357
+##  8 No     No              0.316
+##  9 No     No              0.316
+## 10 No     No              0.357
 ## # ... with 173 more rows</code></pre>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ROC curve</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>

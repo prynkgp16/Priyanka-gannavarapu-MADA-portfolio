@@ -18,7 +18,9 @@ library(pastecs)
 ```
 
 ```{r}
-cleaneddata <- readRDS(here::here("data","processed_data","processeddata.rds"))
+data_location <- here::here("files","processeddata.rds")
+
+cleaneddata <- readRDS(data_location)
 ```
 
 ```{r}

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="priyanka" />
+
+<meta name="date" content="2021-11-12" />
+
+<title>Model Fitting using Tidymodels</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Data Analysis Portfolio</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="./aboutme.html">About Me</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Projects
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./rcoding.html">R Coding</a>
+    </li>
+    <li>
+      <a href="./visualization.html">Visualization</a>
+    </li>
+    <li>
+      <a href="./tidytuesday.html">Tidy Tuesday</a>
+    </li>
+    <li>
+      <a href="./tidytuesday_exercise2.html">Tidy Tuesday 2 Exercise</a>
+    </li>
+    <li>
+      <a href="./Exploration.html">Exploration</a>
+    </li>
+    <li>
+      <a href="./analysisscript.html">Model Fitting using Tidymodels</a>
+    </li>
+    <li>
+      <a href="./analysisscript2.html">Cross-Validation, ROC-Auc, and RMSE</a>
+    </li>
+    <li>
+      <a href="./analysisscript3.html">Machine Learning Modeling</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://prynkgp16.github.io/Priyanka-gannavarapu-MADA-portfolio/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Model Fitting using Tidymodels</h1>
+<h4 class="author">priyanka</h4>
+<h4 class="date">11/12/2021</h4>
+
+</div>
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">###############################</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># analysis script</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#this script loads the processed, cleaned data, does a simple analysis</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#and saves the results to the results folder</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#load needed packages. make sure they are installed.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co">#for plotting</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co">#for cleaning up output from lm()</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co">#for data loading/saving</span></span></code></pre></div>
+<pre><code>## here() starts at C:/Users/Priyanka/Desktop/MADA_2021/Priyanka-gannavarapu-MADA-portfolio</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v tibble  3.1.3     v dplyr   1.0.7
+## v tidyr   1.1.4     v stringr 1.4.0
+## v readr   2.0.1     v forcats 0.5.1
+## v purrr   0.3.4</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;tune&#39;:
+##   method                   from   
+##   required_pkgs.model_spec parsnip</code></pre>
+<pre><code>## -- Attaching packages -------------------------------------- tidymodels 0.1.4 --</code></pre>
+<pre><code>## v dials        0.0.10     v rsample      0.1.0 
+## v infer        1.0.0      v tune         0.1.6 
+## v modeldata    0.1.1      v workflows    0.2.4 
+## v parsnip      0.1.7      v workflowsets 0.1.0 
+## v recipes      0.1.17     v yardstick    0.0.8</code></pre>
+<pre><code>## -- Conflicts ----------------------------------------- tidymodels_conflicts() --
+## x scales::discard() masks purrr::discard()
+## x dplyr::filter()   masks stats::filter()
+## x recipes::fixed()  masks stringr::fixed()
+## x dplyr::lag()      masks stats::lag()
+## x yardstick::spec() masks readr::spec()
+## x recipes::step()   masks stats::step()
+## * Use suppressPackageStartupMessages() to eliminate package startup messages</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#path to data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#note the use of the here() package and not absolute paths</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>data_location <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;files&quot;</span>,<span class="st">&quot;processeddata.rds&quot;</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#load data. </span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>cleaneddata <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(data_location)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Data fitting/statistical analysis</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="do">######################################</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="do">##Linear Models</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)  </span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co">#for plotting</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co">#for cleaning up output from lm()</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#setting engine</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>lmfit <span class="ot">&lt;-</span> </span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;lm&quot;</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co"># fit linear model</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  linear model 1 .Body temperature on runny nose </span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>lm_fit1 <span class="ot">&lt;-</span> lmfit <span class="sc">%&gt;%</span> <span class="fu">fit</span>(BodyTemp <span class="sc">~</span> RunnyNose, <span class="at">data =</span> cleaneddata)  </span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="co"># place results from fit into a data frame with the tidy function</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>lmtable1 <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(lm_fit1)</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="co">#look at fit results</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lmtable1)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 5
+##   term         estimate std.error statistic p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept)    99.1      0.0819   1210.   0      
+## 2 RunnyNoseYes   -0.293    0.0971     -3.01 0.00268</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  linear model 2 .Body temperature on on all predictors</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>lm_fit2 <span class="ot">&lt;-</span> lmfit <span class="sc">%&gt;%</span> <span class="fu">fit</span>(BodyTemp <span class="sc">~</span> ., <span class="at">data =</span> cleaneddata)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># place results from fit into a data frame with the tidy function</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>lmtable2 <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(lm_fit2)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#look at fit results</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lmtable2)</span></code></pre></div>
+<pre><code>## # A tibble: 38 x 5
+##    term                 estimate std.error statistic   p.value
+##    &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1 (Intercept)           97.9       0.304   322.     0        
+##  2 SwollenLymphNodesYes  -0.165     0.0920   -1.80   0.0727   
+##  3 ChestCongestionYes     0.0873    0.0975    0.895  0.371    
+##  4 ChillsSweatsYes        0.201     0.127     1.58   0.114    
+##  5 NasalCongestionYes    -0.216     0.114    -1.90   0.0584   
+##  6 CoughYNYes             0.314     0.241     1.30   0.193    
+##  7 SneezeYes             -0.362     0.0983   -3.68   0.000249 
+##  8 FatigueYes             0.265     0.161     1.65   0.0996   
+##  9 SubjectiveFeverYes     0.437     0.103     4.22   0.0000271
+## 10 HeadacheYes            0.0115    0.125     0.0913 0.927    
+## # ... with 28 more rows</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">#####Comparing model results </span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>comparing_model <span class="ot">=</span> <span class="fu">anova</span>(lm_fit1<span class="sc">$</span>fit,lm_fit2<span class="sc">$</span>fit, <span class="at">data =</span> cleaneddata, <span class="at">test=</span> <span class="st">&quot;Chisq&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in anova.lmlist(object, ...): models with response &#39;&quot;NULL&quot;&#39; removed
+## because response differs from model 1</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(comparing_model)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 5
+##   res.df   rss    df sumsq      p.value
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;
+## 1    728 1031.    NA   NA  NA          
+## 2    695  909.    33  121.  0.000000136</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Logistic regression Model</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">### Logistic regression Model 1 : Nausea on runny nose</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>log_fit <span class="ot">&lt;-</span> </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">logistic_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">&quot;classification&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;glm&quot;</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>glm_1 <span class="ot">&lt;-</span> </span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  log_fit <span class="sc">%&gt;%</span> </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Nausea <span class="sc">~</span> RunnyNose, <span class="at">data =</span> cleaneddata)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>glm_1</span></code></pre></div>
+<pre><code>## parsnip model object
+## 
+## Fit time:  0ms 
+## 
+## Call:  stats::glm(formula = Nausea ~ RunnyNose, family = stats::binomial, 
+##     data = data)
+## 
+## Coefficients:
+##  (Intercept)  RunnyNoseYes  
+##     -0.65781       0.05018  
+## 
+## Degrees of Freedom: 729 Total (i.e. Null);  728 Residual
+## Null Deviance:       944.7 
+## Residual Deviance: 944.6     AIC: 948.6</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summarize the results</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(glm_1)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 5
+##   term         estimate std.error statistic    p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 (Intercept)   -0.658      0.145    -4.53  0.00000589
+## 2 RunnyNoseYes   0.0502     0.172     0.292 0.770</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Logistic regression Model 2: nausea on all predictors</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>glm_2 <span class="ot">&lt;-</span> log_fit <span class="sc">%&gt;%</span> </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Nausea <span class="sc">~</span> ., <span class="at">data =</span> cleaneddata)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>glm_2</span></code></pre></div>
+<pre><code>## parsnip model object
+## 
+## Fit time:  21ms 
+## 
+## Call:  stats::glm(formula = Nausea ~ ., family = stats::binomial, data = data)
+## 
+## Coefficients:
+##            (Intercept)    SwollenLymphNodesYes      ChestCongestionYes  
+##               0.222870               -0.251083                0.275554  
+##        ChillsSweatsYes      NasalCongestionYes              CoughYNYes  
+##               0.274097                0.425817               -0.140423  
+##              SneezeYes              FatigueYes      SubjectiveFeverYes  
+##               0.176724                0.229062                0.277741  
+##            HeadacheYes            WeaknessMild        WeaknessModerate  
+##               0.331259               -0.121606                0.310849  
+##         WeaknessSevere           WeaknessYNYes      CoughIntensityMild  
+##               0.823187                      NA               -0.220794  
+## CoughIntensityModerate    CoughIntensitySevere             CoughYN2Yes  
+##              -0.362678               -0.950544                      NA  
+##            MyalgiaMild         MyalgiaModerate           MyalgiaSevere  
+##              -0.004146                0.204743                0.120758  
+##           MyalgiaYNYes            RunnyNoseYes               AbPainYes  
+##                     NA                0.045324                0.939304  
+##           ChestPainYes             DiarrheaYes                EyePnYes  
+##               0.070777                1.063934               -0.341991  
+##            InsomniaYes             ItchyEyeYes                EarPnYes  
+##               0.084175               -0.063364               -0.181719  
+##             HearingYes          PharyngitisYes           BreathlessYes  
+##               0.323052                0.275364                0.526801  
+##             ToothPnYes               VisionYes                VomitYes  
+##               0.480649                0.125498                2.458466  
+##              WheezeYes                BodyTemp  
+##              -0.304435               -0.031246  
+## 
+## Degrees of Freedom: 729 Total (i.e. Null);  695 Residual
+## Null Deviance:       944.7 
+## Residual Deviance: 751.5     AIC: 821.5</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summarize the results</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(glm_2)</span></code></pre></div>
+<pre><code>## # A tibble: 38 x 5
+##    term                 estimate std.error statistic p.value
+##    &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1 (Intercept)             0.223     7.83     0.0285  0.977 
+##  2 SwollenLymphNodesYes   -0.251     0.196   -1.28    0.200 
+##  3 ChestCongestionYes      0.276     0.213    1.30    0.195 
+##  4 ChillsSweatsYes         0.274     0.288    0.952   0.341 
+##  5 NasalCongestionYes      0.426     0.255    1.67    0.0944
+##  6 CoughYNYes             -0.140     0.519   -0.271   0.787 
+##  7 SneezeYes               0.177     0.210    0.840   0.401 
+##  8 FatigueYes              0.229     0.372    0.616   0.538 
+##  9 SubjectiveFeverYes      0.278     0.225    1.23    0.218 
+## 10 HeadacheYes             0.331     0.285    1.16    0.245 
+## # ... with 28 more rows</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">#####Comparing model results</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>Comp_model <span class="ot">&lt;-</span> <span class="fu">anova</span>(glm_1<span class="sc">$</span>fit, glm_2<span class="sc">$</span>fit, <span class="at">data =</span> cleaneddata, <span class="at">test=</span> <span class="st">&quot;Chisq&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in anova.glm(glm_1$fit, glm_2$fit, data = cleaneddata, test = &quot;Chisq&quot;):
+## the following arguments to &#39;anova.glm&#39; are invalid and dropped: list(data =
+## structure(list(SwollenLymphNodes = structure(c(2L, , 2L, 2L, 2L, 2L, 1L, 1L,
+## 1L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, , 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 1L,
+## 1L, 2L, 2L, 1L, 2L, 1L, 1L, , 2L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 1L, 1L,
+## 2L, 1L, 1L, 1L, , 1L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L,
+## 2L, , 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 1L, , 1L,
+## 2L, 1L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, , 2L, 1L, 1L, 1L,
+## 1L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 2L, 1L, 1L, 2L, , 1L, 1L, 1L, 2L, 1L, 1L, 2L,
+## 1L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 2L, , 1L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 2L,
+## 2L, 1L, 2L, 1L, 2L, 1L, , 2L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 1L,
+## 1L, 2L, 1L, , 2L, 2L, 1L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, ,
+## 1L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 1L, 2L, 1L, 1L, 1L, 2L, , 1L, 1L, 1L,
+## 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, , 1L, 1L, 1L, 2L, 2L, 1L,
+## 1L, 2L, 2L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, , 1L, 1L, 2L, 1L, 2L, 1L, 1L, 2L, 2L,
+## 1L, 1L, 2L, 1L, 2L, 1L, 1L, , 1L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L,
+## 1L, 2L, 2L, 1L, , 1L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 1L, 2L, 1L, 2L, 1L,
+## 1L, , 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, , 1L,
+## 1L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, , 1L, 2L, 2L, 1L,
+## 1L, 1L, 1L, 1L, 2L, 1L, 1L, 2L, 1L, 1L, 2L, 1L, , 1L, 2L, 2L, 2L, 1L, 2L, 1L,
+## 2L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 2L, , 2L, 1L, 1L, 1L, 2L, 1L, 1L, 2L, 1L, 2L,
+## 2L, 2L, 2L, 2L, 1L, 1L, , 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 1L,
+## 1L, 2L, 2L, , 2L, 2L, 1L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, ,
+## 2L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, , 1L, 2L, 1L,
+## 1L, 2L, 1L, 1L, 1L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, , 1L, 1L, 2L, 2L, 1L, 2L,
+## 2L, 1L, 1L, 1L, 1L, 2L, 1L, 1L, 2L, 1L, , 1L, 1L, 2L, 2L, 1L, 1L, 1L, 1L, 1L,
+## 1L, 2L, 2L, 2L, 2L, 1L, 2L, , 1L, 1L, 1L, 2L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 2L,
+## 2L, 1L, 2L, 1L, , 2L, 1L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, 1L, 2L, 1L,
+## 1L, , 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 2L, , 1L, 2L,
+## 1L, 2L, 1L, 1L, 2L, 1L, 1L, 2L, 2L, 2L, 1L, 1L, 1L, 2L, , 2L, 1L, 1L, 1L, 1L,
+## 1L, 2L, 2L, 1L, 2L, 1L, 1L, 1L, 2L, 1L, 1L, , 1L, 1L, 2L, 2L, 2L, 2L, 1L, 1L,
+## 2L, 1L, 2L, 1L, 2L, 2L, 2L, 1L, , 1L, 1L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L,
+## 1L, 1L, 1L, 2L, 2L, , 1L, 2L, 1L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 2L, 2L, 1L,
+## 1L, 1L, , 1L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, , 1L,
+## 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, , 2L, 1L, 1L, 2L,
+## 1L, 1L, 1L, 1L, 1L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, , 2L, 2L, 2L, 2L, 1L, 2L, 2L,
+## 1L, 1L, 1L, 1L, 1L, 2L, 1L, 1L, 1L, , 1L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 2L,
+## 1L, 1L, 2L, 1L, 2L, 1L, , 1L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 1L,
+## 2L, 2L, 2L, , 1L, 1L, 2L, 1L, 1L, 2L, 1L, 2L, 1L, 1L, 2L, 1L, 1L, 2L, 1L, 1L, ,
+## 2L, 1L, 1L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 1L, 1L, 2L, 1L, , 2L, 1L, 2L,
+## 2L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 1L, 1L, 2L, 1L, 1L, , 2L, 2L, 1L, 1L, 1L, 2L,
+## 1L, 1L, 1L), .Label = c(&quot;No&quot;, &quot;Yes&quot;), class = &quot;factor&quot;), , ChestCongestion =
+## structure(c(1L, 2L, 2L, 2L, 1L, 1L, 1L, , 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L,
+## 1L, 2L, 2L, 2L, 2L, 1L, , 2L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 1L,
+## 1L, 1L, , 2L, 1L, 2L, 1L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, , 2L, 1L,
+## 2L, 2L, 1L, 1L, 1L, 2L, 1L, 1L, 1L, 2L, 1L, 1L, 1L, , 2L, 2L, 2L, 2L, 1L, 2L,
+## 2L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, , 1L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 2L,
+## 1L, 2L, 2L, 1L, 2L, , 1L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 2L,
+## 2L, , 2L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, , 2L, 1L, 2L,
+## 1L, 2L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, , 1L, 2L, 1L, 2L, 2L, 2L, 2L,
+## 2L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, , 1L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 1L,
+## 2L, 2L, 1L, 1L, , 2L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, ,
+## 2L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, , 2L, 2L, 1L, 1L,
+## 1L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, , 2L, 1L, 1L, 1L, 1L, 2L, 2L, 2L,
+## 1L, 2L, 2L, 2L, 1L, 2L, 2L, , 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L,
+## 2L, 2L, 2L, , 2L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, , 2L,
+## 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, , 2L, 1L, 2L, 2L, 2L,
+## 2L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, , 1L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L,
+## 1L, 1L, 2L, 1L, 2L, 1L, , 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 1L, 1L, 2L, 1L, 1L,
+## 1L, 1L, , 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, , 1L, 2L,
+## 1L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, , 1L, 2L, 1L, 1L, 2L, 2L,
+## 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, , 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 1L,
+## 1L, 1L, 2L, 2L, 1L, , 2L, 1L, 1L, 1L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 1L,
+## 2L, , 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 2L, , 2L, 1L, 2L,
+## 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 1L, , 1L, 2L, 1L, 1L, 2L, 2L, 2L,
+## 2L, 2L, 1L, 1L, 2L, 2L, 1L, 1L, , 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 1L, 2L,
+## 2L, 1L, 2L, 2L, , 1L, 2L, 1L, 2L, 1L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 1L, ,
+## 1L, 2L, 1L, 1L, 1L, 2L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, , 1L, 1L, 2L, 2L,
+## 1L, 1L, 2L, 2L, 1L, 1L, 1L, 2L, 2L, 1L, 2L, , 2L, 1L, 1L, 2L, 2L, 2L, 2L, 2L,
+## 2L, 2L, 1L, 2L, 1L, 2L, 1L, , 2L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 1L, 1L, 2L, 1L,
+## 2L, 1L, 1L, , 2L, 1L, 2L, 1L, 1L, 1L, 2L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, , 2L,
+## 1L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, , 2L, 2L, 1L, 2L, 2L,
+## 1L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, , 1L, 2L, 2L, 1L, 1L, 2L, 1L, 1L, 2L,
+## 1L, 2L, 1L, 1L, 1L, 2L, , 1L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 1L, 2L, 2L, 2L,
+## 2L, 2L, , 1L, 1L, 1L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, , 2L, 2L,
+## 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, , 2L, 2L, 1L, 2L, 2L, 2L,
+## 2L, 2L, 2L, 1L, 1L, 1L, 1L, 2L, 1L, , 2L, 2L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 1L,
+## 2L, 1L, 2L, 1L, 1L, , 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 1L,
+## 2L, , 2L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, , 1L, 2L, 2L,
+## 1L, 1L, 1L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, , 2L, 1L, 2L, 2L, 1L, 2L, 1L,
+## 1L, 1L, 2L, 1L, 1L, 1L, 1L, 2L, , 2L, 2L, 2L), .Label = c(&quot;No&quot;, &quot;Yes&quot;), class
+## = &quot;factor&quot;), , ChillsSweats = structure(c(1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, , 2L,
+## 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, , 2L, 2L, 2L, 2L, 2L,
+## 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, , 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,
+## 1L, 2L, 2L, 1L, 2L, 2L, , 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,
+## 2L, 2L, , 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, , 1L, 2L,
+## 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 1L, , 2L, 2L, 2L, 2L, 1L, 2L,
+## 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, , 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L,
+## 2L, 2L, 2L, 2L, 2L, , 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,
+## 1L, , 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, , 2L, 2L, 2L,
+## 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, , 2L, 2L, 2L, 2L, 1L, 2L, 2L,
+## 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, , 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L,
+## 2L, 2L, 1L, 2L, , 2L, 1L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, ,
+## 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, , 2L, 2L, 2L, 2L,
+## 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, , 2L, 1L, 2L, 2L, 2L, 2L, 1L, 2L,
+## 2L, 2L, 2L, 2L, 2L, 1L, 2L, , 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,
+## 2L, 2L, 2L, , 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, , 1L,
+## 2L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, , 2L, 2L, 2L, 2L, 2L,
+## 2L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, , 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L,
+## 2L, 2L, 1L, 2L, 2L, 2L, , 2L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,
+## 2L, 2L, , 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, , 1L, 2L,
+## 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 2L, 2L, 2L,</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">#####  model with all predictors had a better fit than single predcitor model</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># save fit results table  </span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(Comp_model, <span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;files&quot;</span>, <span class="st">&quot;glmtable.Rds&quot;</span>))</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(comparing_model, <span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;files&quot;</span>, <span class="st">&quot;lineartable.Rds&quot;</span>))</span></code></pre></div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

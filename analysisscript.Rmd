@@ -17,6 +17,7 @@ library(ggplot2) #for plotting
 library(broom) #for cleaning up output from lm()
 library(here) #for data loading/saving
 library(tidyverse)
+library(tidymodels)
 #path to data
 #note the use of the here() package and not absolute paths
 data_location <- here::here("files","processeddata.rds")
@@ -47,10 +48,10 @@ lmfit <-
 
 ##  linear model 1 .Body temperature on runny nose 
 
-lmfit1<- lm(BodyTemp ~ RunnyNose, cleaneddata)  
+lm_fit1 <- lmfit %>% fit(BodyTemp ~ RunnyNose, data = cleaneddata)  
 
 # place results from fit into a data frame with the tidy function
-lmtable1 <- broom::tidy(lmfit1)
+lmtable1 <- broom::tidy(lm_fit1)
 
 #look at fit results
 print(lmtable1)
@@ -58,11 +59,11 @@ print(lmtable1)
 
 ##  linear model 2 .Body temperature on on all predictors
 
-lmfit2 <- lm(BodyTemp ~ ., cleaneddata)
+lm_fit2 <- lmfit %>% fit(BodyTemp ~ ., data = cleaneddata)
 
 
 # place results from fit into a data frame with the tidy function
-lmtable2 <- broom::tidy(lmfit2)
+lmtable2 <- broom::tidy(lm_fit2)
 
 #look at fit results
 print(lmtable2)
@@ -70,7 +71,7 @@ print(lmtable2)
 
 #####Comparing model results 
 
-comparing_model <- anova(lmfit1$fit, lmfit2$fit, data = cleaneddata, test= "Chisq")
+comparing_model = anova(lm_fit1$fit,lm_fit2$fit, data = cleaneddata, test= "Chisq")
 tidy(comparing_model)
 
 ### Logistic regression Model
@@ -112,8 +113,8 @@ Comp_model <- anova(glm_1$fit, glm_2$fit, data = cleaneddata, test= "Chisq")
 #####  model with all predictors had a better fit than single predcitor model
 
 # save fit results table  
-saveRDS(Comp_model, file = here::here("results", "glmtable.Rds"))
-saveRDS(comparing_model, file = here::here("results", "lineartable.Rds"))
+saveRDS(Comp_model, file = here::here("files", "glmtable.Rds"))
+saveRDS(comparing_model, file = here::here("files", "lineartable.Rds"))
   
 
 

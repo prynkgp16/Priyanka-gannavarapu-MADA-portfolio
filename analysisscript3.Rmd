@@ -315,40 +315,40 @@ rf_mod <-
     add_recipe(recipe_BT)
 
 # 3/4) create tuning grid/tune hyperparameters 
-rf_mod %>% parameters() 
+rf_grid  <- expand.grid(mtry = c(3, 4, 5, 6), min_n = c(40,50,60), trees = c(500,1000)  )
  
 
-rf_res <-
-    rf_workflow %>%
-     tune::tune_grid(resamples = fold_5_data,
-                              grid = 25,
-                              control = control_grid(verbose = TRUE, save_pred = TRUE),
-                              metrics = metric_set(rmse))
+rf_resample <- 
+    rf_workflow %>% 
+    tune_grid(fold_5_data,
+               grid = 25,
+               control = control_grid(save_pred = TRUE),
+               metrics = metric_set(rmse))
 
 #Looking at the models created by random forest
-rf_res %>% 
-  collect_metrics()
+rf_resample %>%
+   collect_metrics()
 
 
 
 #  autoplot the results 
-rf_res %>% autoplot()
+rf_resample %>% autoplot()
 
 # select best  combination 
-rf_res %>% 
-  show_best(metric = "rmse")
+rf_resample %>%
+   show_best()
 
 
-rf_best <-
-  rf_res %>%
-  select_best(metric = "rmse")
+#Selects best performing model
+best_rf <- rf_resample %>%
+  select_best()
 
 # finalize workflow 
-final_rf_workflow <- 
-  rf_workflow %>%
-  finalize_workflow(rf_best)
+rf_final_wf <- 
+     rf_workflow %>% 
+     finalize_workflow(best_rf)
 
-fit_best_forest <- final_rf_workflow %>% 
+fit_best_forest <- rf_final_wf %>% 
   fit(data = train_data)
 
 
