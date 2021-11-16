@@ -424,7 +424,7 @@ $(document).ready(function () {
 ## x dplyr::lag()      masks stats::lag()
 ## x yardstick::spec() masks readr::spec()
 ## x recipes::step()   masks stats::step()
-## * Use suppressPackageStartupMessages() to eliminate package startup messages</code></pre>
+## * Search for functions across packages at https://www.tidymodels.org/find/</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#path to data</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#note the use of the here() package and not absolute paths</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>data_location <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;files&quot;</span>,<span class="st">&quot;processeddata.rds&quot;</span>)</span>
@@ -518,7 +518,7 @@ $(document).ready(function () {
 <span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>glm_1</span></code></pre></div>
 <pre><code>## parsnip model object
 ## 
-## Fit time:  0ms 
+## Fit time:  10ms 
 ## 
 ## Call:  stats::glm(formula = Nausea ~ RunnyNose, family = stats::binomial, 
 ##     data = data)
