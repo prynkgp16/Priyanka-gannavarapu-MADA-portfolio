@@ -114,3 +114,189 @@ raw_ratings %>%
          geom_point() + coord_flip()
 
 ```
+
+
+
+```{r}
+office_split <- initial_split(office, strata = season)
+office_train <- training(office_split)
+office_test <- testing(office_split)
+
+
+
+
+
+set.seed(123)
+ 
+folds <- vfold_cv(office_train, v = 5, repeats =5, strata = season)
+
+office_rec <- recipe(season ~ ., data = office_train)
+
+lm_mod <- 
+    linear_reg() %>% set_engine("lm")
+    
+rec.null <- recipes::recipe(season ~ 1 , data = office_train)
+
+
+null_workflow <-
+     workflow() %>% 
+    add_model(lm_mod) %>% 
+     add_recipe(rec.null)
+     
+null_fit<-
+       null_workflow %>%
+         fit(data = office_train)
+
+null_fit %>%
+     extract_fit_parsnip() %>% 
+     tidy()
+
+predict(null_fit, office_test)
+
+
+null_test_aug <- augment(null_fit, office_test)
+
+ rmse_null_test <- null_test_aug %>% 
+     rmse(truth = imdb_rating, .pred)
+ 
+ 
+ predict(null_fit, office_train)
+ 
+ 
+ null_train_aug <- 
+    augment(null_fit, office_train) 
+ 
+ rmse_null_train <- null_train_aug %>% 
+    rmse(truth = imdb_rating, .pred) 
+ 
+rmse_null_test
+
+
+tree_spec <- 
+     decision_tree(
+        cost_complexity = tune(),
+         tree_depth = tune(),
+        min_n = tune()
+     ) %>% 
+    set_engine("rpart") %>% 
+    set_mode("regression")
+
+tree_wf <- workflow() %>% 
+     add_model(tree_spec) %>% 
+    add_recipe(office_rec)
+ tree_grid <- grid_latin_hypercube(
+     cost_complexity(), tree_depth(), min_n(), size = 10
+ )
+
+tree_res <- tree_wf %>%
+   tune::tune_grid(resamples = folds,
+                     grid = tree_grid,
+                     control = control_grid(verbose = FALSE, save_pred = TRUE),                                    metrics = metric_set(rmse))
+
+ tree_res %>% 
+     collect_metrics() 
+ 
+ 
+ tree_res %>% autoplot()
+ 
+ 
+tree_res %>%
+    show_best("rmse") 
+
+best_tree <- tree_res %>%
+     select_best("rmse")
+
+best_tree
+
+
+final_wf <- 
+tree_wf %>% 
+    finalize_workflow(best_tree)
+
+ final_wf
+ 
+ 
+ final_fit <- 
+    final_wf %>%
+     last_fit(office_split)
+ 
+ final_fit %>%
+     collect_metrics()
+
+```
+
+
+```{r}
+
+office_split <- initial_split(office,prop = 3/4, strata = season)
+
+office_train <- training(office_split)
+ 
+office_test <- testing(office_split)
+
+
+
+office_rec <- recipe(season ~ ., data = office_train) %>%
+  update_role(episode_name, new_role = "ID") %>%
+  step_zv(all_numeric(), -all_outcomes()) %>%
+  step_normalize(all_numeric(), -all_outcomes())
+
+office_prep <- office_rec %>%
+  prep(strings_as_factors = FALSE)
+
+
+## LASSO Model
+
+# model specification
+
+
+lasso_mod <- 
+  linear_reg(penalty = tune(), mixture = 1) %>% 
+  set_engine("glmnet")
+```
+
+# Create a workflow
+
+
+#Workflow
+```{r}
+lasso_workflow <-
+  workflow() %>%
+  add_model(lasso_mod) %>%
+  add_recipe(office_rec)
+```
+
+```{r}
+lasso_mod <- 
+  linear_reg(penalty = tune(), mixture = 1) %>% 
+  set_engine("glmnet")
+```
+
+##Tuning
+
+```{r}
+lasso_grid <- tibble(penalty = 10^seq(-4,-1,length.out = 30))
+
+
+lasso_res <-
+    lasso_workflow %>%
+     tune_grid(folds,
+grid = lasso_grid,
+               control = 
+                   control_grid(save_pred = TRUE),
+              metrics = 
+                   metric_set(rmse))
+
+
+
+ lasso_res
+ 
+ 
+ 
+ best_model <- lasso_res %>%
+    show_best("rmse", n = 15) %>%
+    arrange(penalty)
+ 
+ 
+best_model 
+```
