@@ -184,7 +184,7 @@ tree_workflow <- workflow() %>%
 
 
 tree_res <- tree_workflow %>%
-     tune::tune_grid(resamples = folds,
+     tune::tune_grid(resamples = fold_5_data,
                      grid = tree_grid,
                      control = control_grid(verbose = FALSE, save_pred = TRUE),                                    metrics = metric_set(rmse))
 ```

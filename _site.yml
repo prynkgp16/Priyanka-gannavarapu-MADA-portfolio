@@ -20,7 +20,7 @@ navbar:
         - text: "Tidy Tuesday"
           href: ./tidytuesday.html
         - text: "Tidy Tuesday 2 Exercise"
-          href: ./Tidy-Tuesday2.html
+          href: ./TidyTuesday2.html
         - text: "Exploration"
           href: ./Exploration.html
         - text: "Model Fitting using Tidymodels"

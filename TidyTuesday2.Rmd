@@ -115,10 +115,6 @@ raw_ratings %>%
 
 ```
 
-
-
-
-
 ```{r}
 office_split <- initial_split(office, strata = season)
 office_train <- training(office_split)
@@ -302,6 +298,10 @@ grid = lasso_grid,
  
 best_model 
 ```
+
+
+
+
 
 
 
