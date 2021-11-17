@@ -19,8 +19,8 @@ navbar:
           href: ./visualization.html
         - text: "Tidy Tuesday"
           href: ./tidytuesday.html
-        - text: "Tidy Tuesday 2"
-          href: ./tidytuesday2.html
+        - text: "Tidy Tuesday 2 Exercise"
+          href: ./tidytuesday_exercise2.html
         - text: "Exploration"
           href: ./Exploration.html
         - text: "Model Fitting using Tidymodels"
